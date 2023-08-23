@@ -6,13 +6,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 function Logger(logString) {
+    console.log("LOGGER factory");
     return function (constructor) {
         console.log(logString);
         console.log(constructor);
     };
 }
 function WithTemplate(template, hookID) {
+    console.log("Template factory");
     return function (constructor) {
+        console.log("Rendering templates");
         const hookEL = document.getElementById("app");
         const p = new constructor();
         if (hookEL) {
@@ -28,8 +31,34 @@ let Person = class Person {
     }
 };
 Person = __decorate([
+    Logger("LOGGING - PERSON"),
     WithTemplate("<h1> My Person object</h1>", "app")
 ], Person);
 const newPerson = new Person();
 console.log(newPerson);
+console.log("%c//-------------++Property decorators++-------------", "color: yellow; font-style: italic; background-color: blue;padding: 2px");
+function Log(target, propertyName) {
+    console.log("Property decorator");
+    console.log(target, propertyName);
+}
+class Product {
+    constructor(title, _price) {
+        this.title = title;
+        this._price = _price;
+    }
+    set price(val) {
+        if (val > 0) {
+            this._price = val;
+        }
+        else {
+            throw new Error("Invalid price - Should be positive");
+        }
+    }
+    getPriceWithTax(tax) {
+        return this._price * (1 + tax);
+    }
+}
+__decorate([
+    Log
+], Product.prototype, "title", void 0);
 //# sourceMappingURL=app.js.map
