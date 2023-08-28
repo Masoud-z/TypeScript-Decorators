@@ -19,7 +19,7 @@ function WithTemplate(template, hookID) {
     console.log("Template factory");
     return function (originalConstructor) {
         return class extends originalConstructor {
-            constructor() {
+            constructor(...args) {
                 super();
                 console.log("Rendering templates");
                 const hookEL = document.getElementById(hookID);
@@ -93,4 +93,30 @@ __decorate([
     Log3,
     __param(0, Log4)
 ], Product.prototype, "getPriceWithTax", null);
+function AutoBind(target, methodName, descriptor) {
+    const originalMethod = descriptor.value;
+    const adjDescriptor = {
+        configurable: true,
+        enumerable: false,
+        get() {
+            const boundFN = originalMethod.bind(this);
+            return boundFN;
+        },
+    };
+    return adjDescriptor;
+}
+class Printer {
+    constructor() {
+        this.message = "This works!";
+    }
+    showMessage() {
+        console.log(this.message);
+    }
+}
+__decorate([
+    AutoBind
+], Printer.prototype, "showMessage", null);
+const p = new Printer();
+const button = document.querySelector("button");
+button.addEventListener("click", p.showMessage);
 //# sourceMappingURL=app.js.map
