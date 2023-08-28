@@ -17,14 +17,18 @@ function Logger(logString) {
 }
 function WithTemplate(template, hookID) {
     console.log("Template factory");
-    return function (constructor) {
-        console.log("Rendering templates");
-        const hookEL = document.getElementById("app");
-        const p = new constructor();
-        if (hookEL) {
-            hookEL.innerHTML = template;
-            hookEL.querySelector("h1").textContent = p.name;
-        }
+    return function (originalConstructor) {
+        return class extends originalConstructor {
+            constructor() {
+                super();
+                console.log("Rendering templates");
+                const hookEL = document.getElementById(hookID);
+                if (hookEL) {
+                    hookEL.innerHTML = template;
+                    hookEL.querySelector("h1").textContent = this.name;
+                }
+            }
+        };
     };
 }
 let Person = class Person {
